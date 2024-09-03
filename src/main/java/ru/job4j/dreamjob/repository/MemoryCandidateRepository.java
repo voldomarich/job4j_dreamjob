@@ -13,10 +13,7 @@ import java.util.Optional;
 @Repository
 public class MemoryCandidateRepository implements CandidateRepository {
 
-    private static final MemoryCandidateRepository INSTANCE = new MemoryCandidateRepository();
-
     private int nextId = 1;
-
     private final Map<Integer, Candidate> candidates = new HashMap<>();
 
     private MemoryCandidateRepository() {
@@ -32,10 +29,6 @@ public class MemoryCandidateRepository implements CandidateRepository {
                 LocalDateTime.of(2024, Month.JULY, 1, 9, 0, 3)));
         save(new Candidate(0, "Petr Arsentiev", "тим лид",
                 LocalDateTime.of(2024, Month.JULY, 22, 12, 12, 25)));
-    }
-
-    public static MemoryCandidateRepository getInstance() {
-        return INSTANCE;
     }
 
     @Override
