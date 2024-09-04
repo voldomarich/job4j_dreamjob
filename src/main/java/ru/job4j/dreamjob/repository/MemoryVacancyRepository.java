@@ -20,17 +20,17 @@ public class MemoryVacancyRepository implements VacancyRepository {
 
     private MemoryVacancyRepository() {
         save(new Vacancy(0, "Intern Java Developer", "для прохождения практики",
-                LocalDateTime.of(2024, Month.APRIL, 11, 15, 30, 30)));
+                LocalDateTime.of(2024, Month.APRIL, 11, 15, 30, 30), true));
         save(new Vacancy(0, "Junior Java Developer", "хорошая теоретическая база",
-                LocalDateTime.of(2024, Month.MAY, 15, 11, 11, 11)));
+                LocalDateTime.of(2024, Month.MAY, 15, 11, 11, 11), true));
         save(new Vacancy(0, "Junior+ Java Developer", "надо быть мидлом по факту",
-                LocalDateTime.of(2024, Month.JUNE, 14, 9, 48, 14)));
+                LocalDateTime.of(2024, Month.JUNE, 14, 9, 48, 14), true));
         save(new Vacancy(0, "Middle Java Developer", "опыт мидлом не менее 2 лет",
-                LocalDateTime.of(2024, Month.JULY, 24, 8, 7, 59)));
+                LocalDateTime.of(2024, Month.JULY, 24, 8, 7, 59), true));
         save(new Vacancy(0, "Middle+ Java Developer", "нужны скилы синьора",
-                LocalDateTime.of(2024, Month.JULY, 1, 9, 0, 0)));
+                LocalDateTime.of(2024, Month.JULY, 1, 9, 0, 0), true));
         save(new Vacancy(0, "Senior Java Developer", "нужен архитектор",
-                LocalDateTime.of(2024, Month.JULY, 22, 12, 12, 25)));
+                LocalDateTime.of(2024, Month.JULY, 22, 12, 12, 25), true));
     }
 
     @Override
@@ -47,9 +47,10 @@ public class MemoryVacancyRepository implements VacancyRepository {
 
     @Override
     public boolean update(Vacancy vacancy) {
-        return vacancies.computeIfPresent(vacancy.getId(),
-                (id, oldVacancy) -> new Vacancy(oldVacancy.getId(), vacancy.getTitle(),
-        vacancy.getDescription(), vacancy.getCreationDate())) != null;
+        return vacancies.computeIfPresent(vacancy.getId(), (id, oldVacancy) -> {
+            return new Vacancy(oldVacancy.getId(), vacancy.getTitle(), vacancy.getDescription(),
+                    vacancy.getCreationDate(), vacancy.getVisible());
+        }) != null;
     }
 
     @Override
