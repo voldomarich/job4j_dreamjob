@@ -20,17 +20,17 @@ public class MemoryCandidateRepository implements CandidateRepository {
 
     private MemoryCandidateRepository() {
         save(new Candidate(0, "Ivan Brovkin", "для прохождения практики",
-                LocalDateTime.of(2024, Month.APRIL, 11, 11, 11, 11)));
+                LocalDateTime.of(2024, Month.APRIL, 11, 11, 11, 11), true, 1));
         save(new Candidate(0, "Matvei Sinicin", "джуниор",
-                LocalDateTime.of(2024, Month.MAY, 15, 12, 33, 29)));
+                LocalDateTime.of(2024, Month.MAY, 15, 12, 33, 29), true, 2));
         save(new Candidate(0, "Leonid Khaibullin", "крепкий мидл после job4j",
-                LocalDateTime.of(2024, Month.JUNE, 28, 9, 48, 14)));
+                LocalDateTime.of(2024, Month.JUNE, 28, 9, 48, 14), true, 2));
         save(new Candidate(0, "Pavel Yarsev", "опыт мидлом не менее 2 лет",
-                LocalDateTime.of(2024, Month.JULY, 25, 8, 20, 35)));
+                LocalDateTime.of(2024, Month.JULY, 25, 8, 20, 35), true, 4));
         save(new Candidate(0, "Reso Nashvili", "имеет скилы синьора",
-                LocalDateTime.of(2024, Month.JULY, 1, 9, 0, 3)));
+                LocalDateTime.of(2024, Month.JULY, 1, 9, 0, 3), true, 3));
         save(new Candidate(0, "Petr Arsentiev", "тим лид",
-                LocalDateTime.of(2024, Month.JULY, 22, 12, 12, 25)));
+                LocalDateTime.of(2024, Month.JULY, 22, 12, 12, 25), true, 4));
     }
 
     @Override
@@ -49,7 +49,8 @@ public class MemoryCandidateRepository implements CandidateRepository {
     public boolean update(Candidate candidate) {
         return candidates.computeIfPresent(candidate.getId(),
                 (id, oldCandidate) -> new Candidate(oldCandidate.getId(), candidate.getName(),
-                        candidate.getDescription(), candidate.getCreationDate())) != null;
+                        candidate.getDescription(), candidate.getCreationDate(),
+                        candidate.getVisible(), candidate.getCityId())) != null;
     }
 
     @Override
