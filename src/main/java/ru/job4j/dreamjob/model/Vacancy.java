@@ -35,6 +35,9 @@ public class Vacancy {
         this.fileId = fileId;
     }
 
+    public Vacancy() {
+    }
+
     public int getFileId() {
         return fileId;
     }

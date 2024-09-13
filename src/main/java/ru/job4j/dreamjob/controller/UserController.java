@@ -22,55 +22,41 @@ public class UserController {
         this.userService = userService;
     }
 
-    public static void checkUser(Model model, HttpSession session) {
-        var user = (User) session.getAttribute("user");
-        if (user == null) {
-            user = new User();
-            user.setName("Гость");
-        }
-        model.addAttribute("user", user);
-    }
-
     @GetMapping("/register")
-    public String getRegistrationPage(Model model, HttpSession session) {
-        UserController.checkUser(model, session);
+    public String getRegistrationPage(Model model) {
         return "users/register";
     }
 
     @PostMapping("/register")
-    public String register(@ModelAttribute User user, Model model, HttpSession session) {
-        UserController.checkUser(model, session);
+    public String register(@ModelAttribute User user, Model model) {
         var savedUser = userService.save(user);
         if (savedUser.isEmpty()) {
             model.addAttribute("message", "Пользователь с такой почтой уже существует");
             return "errors/404";
         }
-        return "redirect:/index";
+        return "redirect:/users/login";
     }
 
     @GetMapping("/login")
-    public String getLoginPage(Model model, HttpSession session) {
-        UserController.checkUser(model, session);
+    public String getLoginPage() {
         return "users/login";
     }
 
     @PostMapping("/login")
     public String loginUser(@ModelAttribute User user, Model model,
-                            HttpSession session, HttpServletRequest request) {
-        UserController.checkUser(model, session);
+                            HttpServletRequest request) {
         var userOptional = userService.findByEmailAndPassword(user.getEmail(), user.getPassword());
         if (userOptional.isEmpty()) {
             model.addAttribute("error", "Почта или пароль введены неверно");
             return "users/login";
         }
-        session = request.getSession();
+        var session = request.getSession();
         session.setAttribute("user", userOptional.get());
         return "redirect:/vacancies";
     }
 
     @GetMapping("/logout")
-    public String logout(Model model, HttpSession session) {
-        UserController.checkUser(model, session);
+    public String logout(HttpSession session) {
         session.invalidate();
         return "redirect:/users/login";
     }

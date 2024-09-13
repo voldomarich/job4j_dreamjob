@@ -19,10 +19,13 @@ public class Candidate {
     private int id;
     private String name;
     private String description;
-    private final LocalDateTime creationDate;
+    private LocalDateTime creationDate = LocalDateTime.now();
     private boolean visible;
     private int cityId;
     private int fileId;
+
+    public Candidate() {
+    }
 
     public Candidate(int id, String name, String description, LocalDateTime creationDate,
                      boolean visible, int cityId, int fileId) {

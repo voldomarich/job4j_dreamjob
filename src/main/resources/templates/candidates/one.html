@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<html lang="en">
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
 
@@ -36,18 +35,14 @@
         </div>
         <div class="col-9">
           <div class="mb-3">
-            <label for="title" class="form-label"><b>Название</b></label>
-            <input type="text" class="form-control" id="title" name="title" th:field="*{title}" placeholder="Предлагая должность, например, Ведущий Java разработчик">
+            <label for="name" class="form-label"><b>Название</b></label>
+            <input type="text" class="form-control" id="name" name="name" th:field="*{name}" placeholder="Введите должность, например, Ведущий Java разработчик">
           </div>
           <div class="mb-3">
             <label for="city"><b>Город</b></label>
             <select class="form-control" id="city" name="cityId">
               <option th:each="city : ${cities}" th:value="${city.id}" th:text="${city.name}" th:field="*{cityId}" th:selected="${city.id==cityId}"></option>
             </select>
-          </div>
-          <div class="form-check mb-3">
-            <input type="checkbox" name="visible" class="form-check-input" id="visible" th:field="*{visible}">
-            <label class="form-check-label" for="visible">Опубликовать</label>
           </div>
         </div>
       </div>
@@ -67,6 +62,7 @@
       </div>
     </form>
   </div>
+  <footer th:insert="blocks/footer :: footer"></footer>
 </div>
 </body>
 </html>
