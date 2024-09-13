@@ -11,6 +11,8 @@ import ru.job4j.dreamjob.service.CandidateService;
 import ru.job4j.dreamjob.service.CityService;
 import ru.job4j.dreamjob.service.FileService;
 
+import javax.servlet.http.HttpSession;
+
 @Controller
 @RequestMapping("/candidates")
 @ThreadSafe
@@ -27,8 +29,10 @@ public class CandidateController {
     }
 
     @PostMapping("/create")
-    public String create(@ModelAttribute Candidate vacancy, @RequestParam MultipartFile file, Model model) {
+    public String create(@ModelAttribute Candidate vacancy, @RequestParam MultipartFile file,
+                         Model model, HttpSession session) {
         try {
+            UserController.checkUser(model, session);
             candidateService.save(vacancy, new FileDto(file.getOriginalFilename(), file.getBytes()));
             return "redirect:/vacancies";
         } catch (Exception exception) {
@@ -38,8 +42,10 @@ public class CandidateController {
     }
 
     @PostMapping("/update")
-    public String update(@ModelAttribute Candidate vacancy, @RequestParam MultipartFile file, Model model) {
+    public String update(@ModelAttribute Candidate vacancy, @RequestParam MultipartFile file,
+                         Model model, HttpSession session) {
         try {
+            UserController.checkUser(model, session);
             var isUpdated = candidateService.update(vacancy, new FileDto(file.getOriginalFilename(), file.getBytes()));
             if (!isUpdated) {
                 model.addAttribute("message", "Вакансия с указанным идентификатором не найдена");
@@ -53,19 +59,22 @@ public class CandidateController {
     }
 
     @GetMapping
-    public String getAll(Model model) {
+    public String getAll(Model model, HttpSession session) {
+        UserController.checkUser(model, session);
         model.addAttribute("candidates", candidateService.findAll());
         return "candidates/list";
     }
 
     @GetMapping("/create")
-    public String getCreationPage(Model model) {
+    public String getCreationPage(Model model, HttpSession session) {
+        UserController.checkUser(model, session);
         model.addAttribute("cities", cityService.findAll());
         return "candidates/create";
     }
 
     @GetMapping("/{id}")
-    public String getById(Model model, @PathVariable int id) {
+    public String getById(Model model, @PathVariable int id, HttpSession session) {
+        UserController.checkUser(model, session);
         var vacancyOptional = candidateService.findById(id);
         if (vacancyOptional.isEmpty()) {
             model.addAttribute("message", "Кандидат с указанным идентификатором не найден");
@@ -77,7 +86,8 @@ public class CandidateController {
     }
 
     @GetMapping("/delete/{id}")
-    public String delete(Model model, @PathVariable int id) {
+    public String delete(Model model, @PathVariable int id, HttpSession session) {
+        UserController.checkUser(model, session);
         var isDeleted = candidateService.deleteById(id);
         if (!isDeleted) {
             model.addAttribute("message", "Кандидат с указанным идентификатором не найден");
