@@ -11,8 +11,6 @@ import ru.job4j.dreamjob.service.CandidateService;
 import ru.job4j.dreamjob.service.CityService;
 import ru.job4j.dreamjob.service.FileService;
 
-import javax.servlet.http.HttpSession;
-
 @Controller
 @RequestMapping("/candidates")
 @ThreadSafe
@@ -29,11 +27,11 @@ public class CandidateController {
     }
 
     @PostMapping("/create")
-    public String create(@ModelAttribute Candidate vacancy, @RequestParam MultipartFile file,
+    public String create(@ModelAttribute Candidate candidate, @RequestParam MultipartFile file,
                          Model model) {
         try {
-            candidateService.save(vacancy, new FileDto(file.getOriginalFilename(), file.getBytes()));
-            return "redirect:/vacancies";
+            candidateService.save(candidate, new FileDto(file.getOriginalFilename(), file.getBytes()));
+            return "redirect:/candidates";
         } catch (Exception exception) {
             model.addAttribute("message", exception.getMessage());
             return "errors/404";
@@ -41,15 +39,15 @@ public class CandidateController {
     }
 
     @PostMapping("/update")
-    public String update(@ModelAttribute Candidate vacancy, @RequestParam MultipartFile file,
+    public String update(@ModelAttribute Candidate candidate, @RequestParam MultipartFile file,
                          Model model) {
         try {
-            var isUpdated = candidateService.update(vacancy, new FileDto(file.getOriginalFilename(), file.getBytes()));
+            var isUpdated = candidateService.update(candidate, new FileDto(file.getOriginalFilename(), file.getBytes()));
             if (!isUpdated) {
-                model.addAttribute("message", "Вакансия с указанным идентификатором не найдена");
+                model.addAttribute("message", "Кандидат с указанным идентификатором не найден");
                 return "errors/404";
             }
-            return "redirect:/vacancies";
+            return "redirect:/candidates";
         } catch (Exception exception) {
             model.addAttribute("message", exception.getMessage());
             return "errors/404";
@@ -70,13 +68,13 @@ public class CandidateController {
 
     @GetMapping("/{id}")
     public String getById(Model model, @PathVariable int id) {
-        var vacancyOptional = candidateService.findById(id);
-        if (vacancyOptional.isEmpty()) {
+        var candidateOptional = candidateService.findById(id);
+        if (candidateOptional.isEmpty()) {
             model.addAttribute("message", "Кандидат с указанным идентификатором не найден");
             return "errors/404";
         }
         model.addAttribute("cities", cityService.findAll());
-        model.addAttribute("candidate", vacancyOptional.get());
+        model.addAttribute("candidate", candidateOptional.get());
         return "candidates/one";
     }
 
